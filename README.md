@@ -1,7 +1,8 @@
 # File Utility
 Small helper module to easily find files on local file system by different criterias. <br>
 
-<b>WARNING this is still a work in progress. It's only been tested on Mac and Linux</b><br>
+<b>WARNING This package has only been tested on Mac and Linux</b><br>
+<i>If you would like to make improvments, feel free to contribute to https://github.com/Pixxle/fileutility </i>
 
 ## fileutility.py
 
@@ -65,4 +66,10 @@ OK
 ```
 
 # Installation
-<p>Currently i don't provide any out-of-the-box installation such as pip. The easiest way to use this project is to clone it to your existing project and then import as normal</p>
+
+### With pip
+`pip install fileutility`
+
+### From source
+In your current project folder run:<br>
+`wget https://github.com/Pixxle/fileutility/blob/master/fileutility.py`
