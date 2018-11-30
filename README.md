@@ -1,42 +1,110 @@
-# File Utility
-Small helper module to easily find files on local file system by different criterias. <br>
+# Fileutility
 
-<b>WARNING This package has only been tested on Mac and Linux</b><br>
-<i>If you would like to make improvments, feel free to contribute to https://github.com/Pixxle/fileutility </i>
+File utility is a helper module for locating files on the local file system. It provides functionality to find files based on recursion, min-mtime, max-mtime, file suffix and timestamped filenames with regexp. 
 
-## fileutility.py
+## At a Glance
+Installation using pip:
+
+```python
+pip install fileutility
+```
+
+### Example usages of fileutility:
+
+#### Locate all .txt files
+```python
+import fileutility
+
+found_files = fileutility.find_files(path='/', file_suffix='.txt')
+```
+
+#### Locate all files last modified between 2017-11-30 and 2018-11-30
+
+```python
+import fileutility
+from datetime import datetime
+
+found_files = fileutility.find_files(
+    path='/', 
+    minimum_file_age=datetime(2018,11,30), 
+    maximum_file_age=datetime(2017,11,30)
+)
+```
+
+#### Locate all .txt files with dates in filename from 2017-11-30 to 2018-11-30
+
+```python
+import fileutility
+from datetime import datetime
+
+found_files = fileutility.find_datetime_named_files(
+    path='/'
+    minimum_file_age=datetime(2018,11,30),
+    maximum_file_age=datetime(2017,11,30),
+    file_suffix='.txt'
+)
+```
+
+#### Locate all files in the local folder only
+
+```python
+import fileutility
+
+found_files = fileutility.find_files(
+    path='/',
+    recursion_depth=0
+)
+```
+
+#### Delete all files in a folder and remove folder
+```python
+import fileutility
+
+found_files = fileutility.find_files(
+    path='/tmp/test/'
+)
+
+delete_files(
+    files=found_files,
+    directory_delete=True
+)
+```
+
+## Requirements
+* Python2.7
+
+<b>Warning. Package has only been tested on Linux and Mac.</b>
+
+
+## Supported date in filename filters from out of the box:
+* yyyy(-.\_)mm(-.\_)dd
+* yy(-.\_)Mon(-.\_)dd
+* yyyy(-.\_)Mon(-.\_)dd
+* yy(-.\_)mon(-.\_)dd
+* yyyy(-.\_)mon(-.\_)dd
+* yyyy(-.\_)Mon(-.\_)dd
+* yy(-.\_)Mon(-.\_)dd
+* yyyy(-.\_)mon(-.\_)dd
+* yy(-.\_)mon(-.\_)dd
+* yyyy-mm-ddTHH:MM:SS
+
+If none of the above regexps provide the filter or isn't specific enough you need to apply you can always write your own:
+
+```python
+import fileutility
+
+found_files = fileutility.find_datetime_named_files(
+    path='/'
+    minimum_file_age=datetime(2018,11,30),
+    maximum_file_age=datetime(2017,11,30),
+    file_suffix='.txt',
+    regexp=r'^myfilename-[a-z]{4,10}([0-9]{2})\@([a-z]{3})\@([0-9]{2})'
+)
 
 ```
-fileutility.py
-Simple helper library for locating and manipulating files.
-find_files(path:str, file_suffix:str, recursion_depth:int, minimum_file_age:datetime, maximum_file_age:datetime) -> list of files[]
-path is the root path for the script to start searching, will never look below that path. Each file that is returned will contain the Path as the root for the file.
-file_suffix: Gives you the possibiltiy to only find files ending in suffixes; example: .tar.gz
-recursion_depth: Set the maximum depth the search is allowed to traverse down folders. Default of -1 means it will traverse forever. For only root folder, set it to 0.
-minimum_file_age: All files retrieved must be older than this date.
-maximum_file_age: All files retrieved must be younger than this date.
 
-
-find_datetime_named_file(path:str, file_suffix:str, recursion_depth:int, minimum_file_age:datetime, maximum_file_age:datetime, regexp:str) -> list of files[]
-path is the root path for the script to start searching, will never look below that path. Each file that is returned will contain the Path as the root for the file.
-file_suffix: Gives you the possibiltiy to only find files ending in suffixes; example: .tar.gz
-recursion_depth: Set the maximum depth the search is allowed to traverse down folders. Default of -1 means it will traverse forever. For only root folder, set it to 0.
-minimum_file_age: All files retrieved must be older than this date.
-maximum_file_age: All files retrieved must be younger than this date.
-regexp: If you want to provide a custom regexp for fetching dates instead of using those provided you can just use this functionality.
-
-----
-Raises OSError in case path does not exists
-Raises TypeError wrong type was provided for any of the input parameters
-```
-## test_fileutility.py
-
-```
-test_fileutility.py
-Provides basic unit test for fileutility.py
-Will create folders and files on your drive using the python os module, change the timestamps and perform the tests.
-
-Latest test 2018-11-30:
+## Unit tests status
+```bash
 test_find_all (__main__.TestFindDatetimeFiles) ... ok
 test_find_all_suffix (__main__.TestFindDatetimeFiles) ... ok
 test_find_older (__main__.TestFindDatetimeFiles) ... ok
@@ -60,16 +128,7 @@ test_find_subdir (__main__.TestFindFiles) ... ok
 test_find_younger (__main__.TestFindFiles) ... ok
 
 ----------------------------------------------------------------------
-Ran 21 tests in 0.073s
+Ran 21 tests in 0.075s
 
 OK
 ```
-
-# Installation
-
-### With pip
-`pip install fileutility`
-
-### From source
-In your current project folder run:<br>
-`wget https://github.com/Pixxle/fileutility/blob/master/fileutility.py`

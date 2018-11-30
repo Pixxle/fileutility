@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 import os
-from fileutility import find_datetime_named_file, find_files, delete_files
+from fileutility import find_datetime_named_files, find_files, delete_files
 import datetime
 import time
 import shutil
@@ -124,57 +124,57 @@ class TestFindDatetimeFiles(unittest.TestCase):
         shutil.rmtree('tests/')
 
     def test_find_all(self):
-        found_files = find_datetime_named_file('tests/')
+        found_files = find_datetime_named_files('tests/')
         comp_files = ['tests/subdir1/test4-2018Aug17.txt', 'tests/subdir1/test4-2018-August-17.txt', 'tests/subdir3/test4.2018-August-17.csv', 'tests/subdir3/test4-2018-08-17.txt','tests/subdir1/subdir2/test4_2018_08_17.csv', 'tests/subdir1/subdir2/test4.18Aug17.tar.gz','tests/subdir1/subdir2/test4.18Aug19.tar.gz']
         self.assertListEqual(sorted(found_files), sorted(comp_files))
 
     def test_find_root(self):
-        found_files = find_datetime_named_file('tests/subdir1/', recursion_depth=0)
+        found_files = find_datetime_named_files('tests/subdir1/', recursion_depth=0)
         comp_files = ['tests/subdir1/test4-2018Aug17.txt','tests/subdir1/test4-2018-August-17.txt' ]
         self.assertListEqual(sorted(found_files), sorted(comp_files))
 
     def test_find_subdir(self):
-        found_files = find_datetime_named_file('tests/subdir1/', recursion_depth=1)
+        found_files = find_datetime_named_files('tests/subdir1/', recursion_depth=1)
         comp_files = ['tests/subdir1/test4-2018Aug17.txt', 'tests/subdir1/test4-2018-August-17.txt','tests/subdir1/subdir2/test4_2018_08_17.csv', 'tests/subdir1/subdir2/test4.18Aug17.tar.gz','tests/subdir1/subdir2/test4.18Aug19.tar.gz']
         self.assertListEqual(sorted(found_files), sorted(comp_files))
     
     def test_find_all_suffix(self):
-        found_files = find_datetime_named_file('tests/', file_suffix='.tar.gz')
+        found_files = find_datetime_named_files('tests/', file_suffix='.tar.gz')
         comp_files = ['tests/subdir1/subdir2/test4.18Aug17.tar.gz','tests/subdir1/subdir2/test4.18Aug19.tar.gz']
         self.assertListEqual(sorted(found_files), sorted(comp_files))
 
     def test_find_younger(self):
-        found_files = find_datetime_named_file(path='tests/', minimum_file_age=datetime.datetime(2018,8,18))
+        found_files = find_datetime_named_files(path='tests/', minimum_file_age=datetime.datetime(2018,8,18))
         comp_files = ['tests/subdir1/test4-2018Aug17.txt','tests/subdir1/test4-2018-August-17.txt', 'tests/subdir3/test4.2018-August-17.csv', 'tests/subdir3/test4-2018-08-17.txt','tests/subdir1/subdir2/test4_2018_08_17.csv', 'tests/subdir1/subdir2/test4.18Aug17.tar.gz']
         self.assertListEqual(sorted(found_files), sorted(comp_files))
 
     def test_find_older(self):
-        found_files = find_datetime_named_file(path='tests/', maximum_file_age=datetime.datetime(2018,8,18))
+        found_files = find_datetime_named_files(path='tests/', maximum_file_age=datetime.datetime(2018,8,18))
         comp_files = ['tests/subdir1/subdir2/test4.18Aug19.tar.gz']
         self.assertListEqual(sorted(found_files), sorted(comp_files))
 
     def test_find_older_younger(self):
-        found_files = find_datetime_named_file(path='tests/', minimum_file_age=datetime.datetime(2018,8,19), maximum_file_age=datetime.datetime(2018,8,17))
+        found_files = find_datetime_named_files(path='tests/', minimum_file_age=datetime.datetime(2018,8,19), maximum_file_age=datetime.datetime(2018,8,17))
         comp_files = ['tests/subdir1/test4-2018Aug17.txt','tests/subdir1/test4-2018-August-17.txt', 'tests/subdir3/test4.2018-August-17.csv', 'tests/subdir3/test4-2018-08-17.txt','tests/subdir1/subdir2/test4_2018_08_17.csv', 'tests/subdir1/subdir2/test4.18Aug17.tar.gz', 'tests/subdir1/subdir2/test4.18Aug19.tar.gz']
         self.assertListEqual(sorted(found_files),sorted(comp_files))
 
     def test_find_older_younger_suffix(self):
-        found_files = find_datetime_named_file(path='tests/', file_suffix='.tar.gz', minimum_file_age=datetime.datetime(2018,8,19), maximum_file_age=datetime.datetime(2018,8,17))
+        found_files = find_datetime_named_files(path='tests/', file_suffix='.tar.gz', minimum_file_age=datetime.datetime(2018,8,19), maximum_file_age=datetime.datetime(2018,8,17))
         comp_files = ['tests/subdir1/subdir2/test4.18Aug19.tar.gz', 'tests/subdir1/subdir2/test4.18Aug17.tar.gz']
         self.assertListEqual(sorted(found_files), sorted(comp_files))
 
     def test_find_regexp(self):
-        found_files = find_datetime_named_file(path='tests/', regexp=r'([0-9]{4})-([0-9]{2})-([0-9]{2})')
+        found_files = find_datetime_named_files(path='tests/', regexp=r'([0-9]{4})-([0-9]{2})-([0-9]{2})')
         comp_files = ['tests/subdir3/test4-2018-08-17.txt']
         self.assertListEqual(sorted(found_files), sorted(comp_files))
 
     def test_find_regexp_suffix(self):
-        found_files = find_datetime_named_file(path='tests/', file_suffix='.tar.gz', regexp=r'([0-9]{2})[\-]?([a-zA-Z]{3})[\-]?([0-9]{2})')
+        found_files = find_datetime_named_files(path='tests/', file_suffix='.tar.gz', regexp=r'([0-9]{2})[\-]?([a-zA-Z]{3})[\-]?([0-9]{2})')
         comp_files = ['tests/subdir1/subdir2/test4.18Aug19.tar.gz', 'tests/subdir1/subdir2/test4.18Aug17.tar.gz']
         self.assertListEqual(sorted(found_files), sorted(comp_files))
 
     def test_find_regexp_suffix_no_recursion(self):
-        found_files = find_datetime_named_file(path='tests/subdir1/', file_suffix='.txt', recursion_depth=0, regexp=r'([0-9]{4})[\-]?([a-zA-Z]{3,10})[\-]?([0-9]{2})')                                                                                          
+        found_files = find_datetime_named_files(path='tests/subdir1/', file_suffix='.txt', recursion_depth=0, regexp=r'([0-9]{4})[\-]?([a-zA-Z]{3,10})[\-]?([0-9]{2})')                                                                                          
         comp_files = ['tests/subdir1/test4-2018-August-17.txt', 'tests/subdir1/test4-2018Aug17.txt']
         self.assertListEqual(sorted(found_files), sorted(comp_files))
 

@@ -3,7 +3,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 setuptools.setup(
      name='fileutility',  
-     version='0.3',
+     version='0.4',
      scripts=['fileutility'] ,
      author="Dennis Hedlund",
      author_email="dennishedlund@gmail.com",
